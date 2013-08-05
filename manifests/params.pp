@@ -17,14 +17,20 @@ class glance::params {
   ### Application related parameters
 
   $package = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'glance-compute',
-    default                   => 'openstack-glance-compute',
+    /(?i:Debian|Ubuntu|Mint)/ => 'glance',
+    default                   => 'openstack-glance',
   }
 
   $service = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'glance-compute',
-    default                   => 'openstack-glance-compute',
+    /(?i:Debian|Ubuntu|Mint)/ => 'glance-api',
+    default                   => 'openstack-glance-api',
   }
+
+  $registry_service = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => 'glance-registry',
+    default                   => 'openstack-glance-registry',
+  }
+
 
   $service_status = $::operatingsystem ? {
     default => true,
@@ -47,7 +53,11 @@ class glance::params {
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/glance/glance.conf',
+    default => '/etc/glance/glance-api.conf',
+  }
+
+  $registry_config_file = $::operatingsystem ? {
+    default => '/etc/glance/glance-registry.conf',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -55,11 +65,11 @@ class glance::params {
   }
 
   $config_file_owner = $::operatingsystem ? {
-    default => 'root',
+    default => 'glance',
   }
 
   $config_file_group = $::operatingsystem ? {
-    default => 'root',
+    default => 'glance',
   }
 
   $pid_file = $::operatingsystem ? {
@@ -75,7 +85,7 @@ class glance::params {
   }
 
   $log_file = $::operatingsystem ? {
-    default => [ '/var/log/glance/glance-compute.log' , '/var/log/glance/glance-manage.log' ],
+    default => [ '/var/log/glance/api.log' , '/var/log/glance/registry.log' ],
   }
 
   $port = '5000'
@@ -84,9 +94,11 @@ class glance::params {
   # General Settings
   $my_class = ''
   $source = ''
+  $registry_source = ''
   $source_dir = ''
   $source_dir_purge = false
   $template = ''
+  $registry_template = ''
   $options = ''
   $service_autorestart = true
   $version = 'present'

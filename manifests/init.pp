@@ -197,11 +197,17 @@
 # See README for usage patterns.
 #
 class glance (
+  $registry_config_file      = params_lookup( 'registry_config_file' ),
+  $registry_service_registry = params_lookup( 'registry_service' ),
+  $registry_source           = params_lookup( 'registry_source' ),
+  $registry_template         = params_lookup( 'registry_template' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
+  $source_registry     = params_lookup( 'source_registry' ),
   $source_dir          = params_lookup( 'source_dir' ),
   $source_dir_purge    = params_lookup( 'source_dir_purge' ),
   $template            = params_lookup( 'template' ),
+  $template_registry   = params_lookup( 'template_registry' ),
   $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
   $options             = params_lookup( 'options' ),
   $version             = params_lookup( 'version' ),
@@ -222,6 +228,7 @@ class glance (
   $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
   $service             = params_lookup( 'service' ),
+  $service_registry    = params_lookup( 'service_registry' ),
   $service_status      = params_lookup( 'service_status' ),
   $process             = params_lookup( 'process' ),
   $process_args        = params_lookup( 'process_args' ),
@@ -281,6 +288,11 @@ class glance (
     false   => undef,
   }
 
+  $manage_registry_service_autorestart = $glance::bool_service_autorestart ? {
+    true    => Service[glance_registry],
+    false   => undef,
+  }
+
   $manage_file = $glance::bool_absent ? {
     true    => 'absent',
     default => 'present',
@@ -321,6 +333,16 @@ class glance (
     default   => template($glance::template),
   }
 
+  $manage_registry_file_source = $glance::registry_source ? {
+    ''        => undef,
+    default   => $glance::registry_source,
+  }
+
+  $manage_registry_file_content = $glance::registry_template ? {
+    ''        => undef,
+    default   => template($glance::registry_template),
+  }
+
   ### Managed resources
   package { $glance::package:
     ensure  => $glance::manage_package,
@@ -330,6 +352,16 @@ class glance (
   service { 'glance':
     ensure     => $glance::manage_service_ensure,
     name       => $glance::service,
+    enable     => $glance::manage_service_enable,
+    hasstatus  => $glance::service_status,
+    pattern    => $glance::process,
+    require    => Package[$glance::package],
+    noop       => $glance::bool_noops,
+  }
+
+  service { 'glance_registry':
+    ensure     => $glance::manage_service_ensure,
+    name       => $glance::registry_service,
     enable     => $glance::manage_service_enable,
     hasstatus  => $glance::service_status,
     pattern    => $glance::process,
@@ -352,6 +384,20 @@ class glance (
     noop    => $glance::bool_noops,
   }
 
+  file { 'glance.conf_registry':
+    ensure  => $glance::manage_file,
+    path    => $glance::registry_config_file,
+    mode    => $glance::config_file_mode,
+    owner   => $glance::config_file_owner,
+    group   => $glance::config_file_group,
+    require => Package[$glance::package],
+    notify  => $glance::manage_registry_service_autorestart,
+    source  => $glance::manage_registry_file_source,
+    content => $glance::manage_registry_file_content,
+    replace => $glance::manage_file_replace,
+    audit   => $glance::manage_audit,
+    noop    => $glance::bool_noops,
+  }
   # The whole glance configuration directory can be recursively overriden
   if $glance::source_dir {
     file { 'glance.dir':
