@@ -6,7 +6,7 @@ class glance::puppi {
     ensure    => $glance::manage_file,
     variables => $classvars,
     helper    => $glance::puppi_helper,
-    noop      => $glance::bool_noops,
+    noop      => $glance::noops,
   }
 
   # For Puppi 1
@@ -26,7 +26,7 @@ class glance::puppi {
   }
 
   puppi::log { "glance":
-    description => "Logs of glance" ,  
+    description => "Logs of glance" ,
     log      => "${glance::log_file}",
   }
 

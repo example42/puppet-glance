@@ -128,7 +128,7 @@
 # [*noops*]
 #   Set noop metaparameter to true for all the resources managed by the module.
 #   Basically you can run a dryrun for this specific module if you set
-#   this to true. Default: false
+#   this to true. Default: undef
 #
 # Default class params - As defined in glance::params.
 # Note that these variables are mostly defined and used in the module itself,
@@ -256,7 +256,6 @@ class glance (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
-  $bool_noops=any2bool($noops)
 
   ### Definition of some variables used in the module
   $manage_package = $glance::bool_absent ? {
@@ -346,7 +345,7 @@ class glance (
   ### Managed resources
   package { $glance::package:
     ensure  => $glance::manage_package,
-    noop    => $glance::bool_noops,
+    noop    => $glance::noops,
   }
 
   service { 'glance':
@@ -356,7 +355,7 @@ class glance (
     hasstatus  => $glance::service_status,
     pattern    => $glance::process,
     require    => Package[$glance::package],
-    noop       => $glance::bool_noops,
+    noop       => $glance::noops,
   }
 
   service { 'glance_registry':
@@ -366,7 +365,7 @@ class glance (
     hasstatus  => $glance::service_status,
     pattern    => $glance::process,
     require    => Package[$glance::package],
-    noop       => $glance::bool_noops,
+    noop       => $glance::noops,
   }
 
   file { 'glance.conf':
@@ -381,7 +380,7 @@ class glance (
     content => $glance::manage_file_content,
     replace => $glance::manage_file_replace,
     audit   => $glance::manage_audit,
-    noop    => $glance::bool_noops,
+    noop    => $glance::noops,
   }
 
   file { 'glance.conf_registry':
@@ -396,7 +395,7 @@ class glance (
     content => $glance::manage_registry_file_content,
     replace => $glance::manage_file_replace,
     audit   => $glance::manage_audit,
-    noop    => $glance::bool_noops,
+    noop    => $glance::noops,
   }
   # The whole glance configuration directory can be recursively overriden
   if $glance::source_dir {
@@ -411,7 +410,7 @@ class glance (
       force   => $glance::bool_source_dir_purge,
       replace => $glance::manage_file_replace,
       audit   => $glance::manage_audit,
-      noop    => $glance::bool_noops,
+      noop    => $glance::noops,
     }
   }
 
@@ -437,7 +436,7 @@ class glance (
         target   => $glance::monitor_target,
         tool     => $glance::monitor_tool,
         enable   => $glance::manage_monitor,
-        noop     => $glance::bool_noops,
+        noop     => $glance::noops,
       }
     }
     if $glance::service != '' {
@@ -449,7 +448,7 @@ class glance (
         argument => $glance::process_args,
         tool     => $glance::monitor_tool,
         enable   => $glance::manage_monitor,
-        noop     => $glance::bool_noops,
+        noop     => $glance::noops,
       }
     }
   }
@@ -466,7 +465,7 @@ class glance (
       direction   => 'input',
       tool        => $glance::firewall_tool,
       enable      => $glance::manage_firewall,
-      noop        => $glance::bool_noops,
+      noop        => $glance::noops,
     }
   }
 
@@ -480,7 +479,7 @@ class glance (
       owner   => 'root',
       group   => 'root',
       content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'),
-      noop    => $glance::bool_noops,
+      noop    => $glance::noops,
     }
   }
 

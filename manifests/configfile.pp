@@ -42,7 +42,7 @@ define glance::configfile (
     content => template($template),
     replace => $glance::manage_file_replace,
     audit   => $glance::manage_audit,
-    noop    => $glance::bool_noops,
+    noop    => $glance::noops,
   }
 
 }
