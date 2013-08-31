@@ -423,7 +423,7 @@ class glance (
 
   ### Provide puppi data, if enabled ( puppi => true )
   if $glance::bool_puppi == true {
-    include glance::puppi 
+    include glance::puppi
   }
 
 
