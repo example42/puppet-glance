@@ -27,7 +27,7 @@ Refer to http://github.com/stdmod/ for complete documentation on the common para
 
 ###Resources managed by glance module
 * This module installs the glance package
-* Enables the glance service
+* Enables the glance-api and glance-registry services
 * Can manage all the configuration files (by default no file is changed)
 
 ###Setup Requirements
@@ -102,6 +102,11 @@ The module provides also a generic define to manage any glance configuration fil
           config_dir_recursion => false, # Default: true.
         }
 
+* Use the additional example42 subclass for puppi extensions
+
+        class { 'glance':
+          my_class => 'glance::example42'
+        }
 
 ##Operating Systems Support
 
