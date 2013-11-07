@@ -18,6 +18,8 @@ class glance (
   $service_ensure            = 'running',
   $service_enable            = true,
 
+  $registry_service_name     = $glance::params::registry_service_name,
+
   $config_file_path          = $glance::params::config_file_path,
   $config_file_replace       = $glance::params::config_file_replace,
   $config_file_require       = 'Package[glance]',
@@ -26,6 +28,7 @@ class glance (
   $config_file_template      = undef,
   $config_file_content       = undef,
   $config_file_options_hash  = undef,
+
 
   $config_dir_path           = $glance::params::config_dir_path,
   $config_dir_source         = undef,
@@ -89,6 +92,10 @@ class glance (
 
   if $glance::service_name {
     service { $glance::service_name:
+      ensure     => $glance::manage_service_ensure,
+      enable     => $glance::manage_service_enable,
+    }
+    service { $glance::registry_service_name:
       ensure     => $glance::manage_service_ensure,
       enable     => $glance::manage_service_enable,
     }

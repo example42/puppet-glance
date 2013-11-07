@@ -5,15 +5,22 @@
 class glance::params {
 
   $package_name = $::osfamily ? {
-    default => 'glance',
+    'Redhat' => 'openstack-glance',
+    default  => 'glance',
   }
 
   $service_name = $::osfamily ? {
-    default => 'glance',
+    'Redhat' => 'openstack-glance-api',
+    default  => 'glance-api',
+  }
+
+  $registry_service_name = $::osfamily ? {
+    'Redhat' => 'openstack-glance-registry',
+    default  => 'glance-registry',
   }
 
   $config_file_path = $::osfamily ? {
-    default => '/etc/glance/glance.conf',
+    default => '/etc/glance/glance-api.conf',
   }
 
   $config_file_mode = $::osfamily ? {
