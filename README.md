@@ -22,6 +22,8 @@ The module is based on **stdmod** naming standards version 0.9.0.
 
 Refer to http://github.com/stdmod/ for complete documentation on the common parameters.
 
+For a fully puppetized OpenStack implementation you'd better use the official StackForge modules. This module is intended to be a quick replacement for setups where you want to manage configurations based on plain files on an existing setup.
+
 
 ##Setup
 
