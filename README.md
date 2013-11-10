@@ -104,6 +104,14 @@ The module provides also a generic define to manage any glance configuration fil
           config_dir_recursion => false, # Default: true.
         }
 
+
+* Install extra packages (clients, plugins...). Can be an array. Default: client package.
+
+        class { 'glance':
+          extra_package_name    => [ 'python-glance' , 'python-glanceclient' ],
+        }
+
+
 * Use the additional example42 subclass for puppi extensions
 
         class { 'glance':

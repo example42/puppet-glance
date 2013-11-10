@@ -4,6 +4,10 @@
 #
 class glance::params {
 
+  $extra_package_name = $::osfamily ? {
+    default  => 'python-glance',
+  }
+
   $package_name = $::osfamily ? {
     'Redhat' => 'openstack-glance',
     default  => 'glance',

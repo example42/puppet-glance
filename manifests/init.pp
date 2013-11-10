@@ -11,6 +11,8 @@
 #
 class glance (
 
+  $extra_package_name        = $glance::params::extra_package_name,
+
   $package_name              = $glance::params::package_name,
   $package_ensure            = 'present',
 
@@ -86,6 +88,12 @@ class glance (
 
   if $glance::package_name {
     package { $glance::package_name:
+      ensure   => $glance::package_ensure,
+    }
+  }
+
+  if $glance::extra_package_name {
+    package { $glance::extra_package_name:
       ensure   => $glance::package_ensure,
     }
   }
