@@ -87,8 +87,9 @@ class glance (
   # Resources managed
 
   if $glance::package_name {
-    package { $glance::package_name:
+    package { 'glance':
       ensure   => $glance::package_ensure,
+      name     => $glance::package_name,
     }
   }
 
@@ -99,8 +100,9 @@ class glance (
   }
 
   if $glance::service_name {
-    service { $glance::service_name:
+    service { 'glance':
       ensure     => $glance::manage_service_ensure,
+      name       => $glance::manage_service_name,
       enable     => $glance::manage_service_enable,
     }
     service { $glance::registry_service_name:
