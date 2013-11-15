@@ -4,35 +4,26 @@
 #
 class glance::params {
 
-  $extra_package_name = $::osfamily ? {
-    default  => 'python-glance',
-  }
-
   $package_name = $::osfamily ? {
-    'Redhat' => 'openstack-glance',
+    'RedHat' => 'openstack-glance',
     default  => 'glance',
   }
 
   $service_name = $::osfamily ? {
     'Redhat' => 'openstack-glance-api',
-    default  => 'glance-api',
-  }
-
-  $registry_service_name = $::osfamily ? {
-    'Redhat' => 'openstack-glance-registry',
-    default  => 'glance-registry',
+     default  => 'glance-api',
   }
 
   $config_file_path = $::osfamily ? {
-    default => '/etc/glance/glance-api.conf',
+    default => '/etc/glance/glance.conf',
   }
 
   $config_file_mode = $::osfamily ? {
-    default => '0644',
+    default => '0640',
   }
 
   $config_file_owner = $::osfamily ? {
-    default => 'glance',
+    default => 'root',
   }
 
   $config_file_group = $::osfamily ? {

@@ -14,27 +14,28 @@
 
 ##Overview
 
-This module installs, manages and configures glance.
+This module installs, manages and configures glance and its services.
 
 ##Module Description
 
 The module is based on **stdmod** naming standards version 0.9.0.
 
-Refer to http://github.com/stdmod/ for complete documentation on the common parameters.
+Refer to [http://github.com/stdmod/](http://github.com/stdmod/) for complete documentation on the common parameters.
 
-For a fully puppetized OpenStack implementation you'd better use the official StackForge modules. This module is intended to be a quick replacement for setups where you want to manage configurations based on plain files on an existing setup.
-
+For a fully automated Puppet setup of OpenStack you'd better use the official [StackForge modules](https://github.com/stackforge/puppet-openstack).
+This module is intended to be a quick replacement for setups where you want to manage configurations based on plain template files or where you want to puppettize an existing OpenStack installation.
 
 ##Setup
 
 ###Resources managed by glance module
-* This module installs the glance package
-* Enables the glance-api and glance-registry services
+* This module installs the glance package (in case of multiple services, the glance-api package is installed)
+* Enables the glance service (in case of multiple services, the glance-api service is managed)
 * Can manage all the configuration files (by default no file is changed)
+* Can manage any glance service and its configuration file (by default no file is changed)
 
 ###Setup Requirements
-* PuppetLabs stdlib module
-* StdMod stdmod module
+* PuppetLabs [stdlib module](https://github.com/puppetlabs/puppetlabs-stdlib)
+* StdMod [stdmod module](https://github.com/stdmod/stdmod)
 * Puppet version >= 2.7.x
 * Facter version >= 1.6.2
 
@@ -50,12 +51,21 @@ The main class arguments can be provided either via Hiera (from Puppet 3.x) or d
           parameter => value,
         }
 
-The module provides also a generic define to manage any glance configuration file:
+The module provides a generic define to manage any glance configuration file in /etc/glance:
 
         glance::conf { 'sample.conf':
           content => '# Test',
         }
 
+A define to manage the package/service/configfile of single glance services. To install the package and run the service:
+
+        glance::generic_service { 'glance-registry': }
+
+To provide a configuration file for the service (alternative to glance::conf):
+
+        glance::generic_service { 'glance-registry':
+          config_file_template => 'site/glance/glance-registry.conf
+        }
 
 ##Usage
 
@@ -83,7 +93,7 @@ The module provides also a generic define to manage any glance configuration fil
         }
 
 
-* Use custom source directory for the whole configuration directory, where present.
+* Recurse from a custom source directory for the whole configuration directory (/etc/glance).
 
         class { 'glance':
           config_dir_source  => 'puppet:///modules/site/glance/conf/',
@@ -104,26 +114,18 @@ The module provides also a generic define to manage any glance configuration fil
           config_dir_recursion => false, # Default: true.
         }
 
-
-* Install extra packages (clients, plugins...). Can be an array. Default: client package.
-
-        class { 'glance':
-          extra_package_name    => [ 'python-glance' , 'python-glanceclient' ],
-        }
-
-
-* Use the additional example42 subclass for puppi extensions
+* Do not trigger a service restart when a config file changes.
 
         class { 'glance':
-          my_class => 'glance::example42'
+          config_dir_notify => '', # Default: Service[glance]
         }
+
 
 ##Operating Systems Support
 
 This is tested on these OS:
-- RedHat osfamily 5 and 6
-- Debian 6 and 7
-- Ubuntu 10.04 and 12.04
+- RedHat osfamily 6
+- Ubuntu 12.04
 
 
 ##Development

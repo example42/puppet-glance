@@ -11,8 +11,6 @@
 #
 class glance (
 
-  $extra_package_name        = $glance::params::extra_package_name,
-
   $package_name              = $glance::params::package_name,
   $package_ensure            = 'present',
 
@@ -20,17 +18,14 @@ class glance (
   $service_ensure            = 'running',
   $service_enable            = true,
 
-  $registry_service_name     = $glance::params::registry_service_name,
-
   $config_file_path          = $glance::params::config_file_path,
   $config_file_replace       = $glance::params::config_file_replace,
   $config_file_require       = 'Package[glance]',
-  $config_file_notify        = 'Service[glance]',
+  $config_file_notify        = 'class_default',
   $config_file_source        = undef,
   $config_file_template      = undef,
   $config_file_content       = undef,
   $config_file_options_hash  = undef,
-
 
   $config_dir_path           = $glance::params::config_dir_path,
   $config_dir_source         = undef,
@@ -69,7 +64,11 @@ class glance (
 
   $manage_config_file_content = default_content($config_file_content, $config_file_template)
 
-  $manage_config_file_notify = pickx($config_file_notify)
+  $manage_config_file_notify  = $config_file_notify ? {
+    'class_default' => undef,
+    ''              => undef,
+    default         => $config_file_notify,
+  }
 
   if $package_ensure == 'absent' {
     $manage_service_enable = undef
@@ -93,20 +92,10 @@ class glance (
     }
   }
 
-  if $glance::extra_package_name {
-    package { $glance::extra_package_name:
-      ensure   => $glance::package_ensure,
-    }
-  }
-
   if $glance::service_name {
     service { 'glance':
       ensure     => $glance::manage_service_ensure,
-      name       => $glance::manage_service_name,
-      enable     => $glance::manage_service_enable,
-    }
-    service { $glance::registry_service_name:
-      ensure     => $glance::manage_service_ensure,
+      name       => $glance::service_name,
       enable     => $glance::manage_service_enable,
     }
   }
@@ -133,7 +122,7 @@ class glance (
       recurse => $glance::config_dir_recurse,
       purge   => $glance::config_dir_purge,
       force   => $glance::config_dir_purge,
-      notify  => $glance::config_file_notify,
+      notify  => $glance::manage_config_file_notify,
       require => $glance::config_file_require,
     }
   }

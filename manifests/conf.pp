@@ -57,7 +57,7 @@ define glance::conf (
   $mode         = undef,
   $owner        = undef,
   $group        = undef,
-  $notify       = undef,
+  $notify       = 'class_default',
   $require      = undef,
   $replace      = undef,
 
@@ -75,8 +75,11 @@ define glance::conf (
   $manage_owner   = pickx($owner, $glance::config_file_owner)
   $manage_group   = pickx($group, $glance::config_file_group)
   $manage_require = pickx($require, $glance::config_file_require)
-  $manage_notify  = pickx($notify, $glance::manage_config_file_notify)
   $manage_replace = pickx($replace, $glance::config_file_replace)
+  $manage_notify  = $notify ? {
+    'class_default' => $glance::manage_config_file_notify,
+    default         => $notify,
+  }
 
   file { "glance_conf_${name}":
     ensure  => $ensure,

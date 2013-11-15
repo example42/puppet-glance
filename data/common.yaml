@@ -1,0 +1,8 @@
+---
+package_name: 'glance'
+service_name: 'glance'
+config_file_path:  '/etc/glance/glance.conf'
+config_file_mode: '0644'
+config_file_owner: 'root'
+config_file_group: 'root'
+config_dir_path: '/etc/glance'
