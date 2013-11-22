@@ -141,7 +141,7 @@ class glance (
   if $glance::monitor_class {
     class { $glance::monitor_class:
       options_hash => $glance::monitor_options_hash,
-      scope_hash   => {}, # TODO: Find a good way to inject class' scope
+      scope_hash   => {}, # TODO: Find a good way to inject class' scope
     }
   }
 
