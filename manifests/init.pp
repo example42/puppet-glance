@@ -11,6 +11,9 @@
 #
 class glance (
 
+  $conf_hash                 = undef,
+  $generic_service_hash      = undef,
+
   $package_name              = $glance::params::package_name,
   $package_ensure            = 'present',
 
@@ -92,14 +95,6 @@ class glance (
     }
   }
 
-  if $glance::service_name {
-    service { 'glance':
-      ensure     => $glance::manage_service_ensure,
-      name       => $glance::service_name,
-      enable     => $glance::manage_service_enable,
-    }
-  }
-
   if $glance::config_file_path {
     file { 'glance.conf':
       ensure  => $glance::config_file_ensure,
@@ -127,8 +122,24 @@ class glance (
     }
   }
 
+  if $glance::service_name {
+    service { 'glance':
+      ensure     => $glance::manage_service_ensure,
+      name       => $glance::service_name,
+      enable     => $glance::manage_service_enable,
+    }
+  }
+
 
   # Extra classes
+  if $conf_hash {
+    create_resources('glance::conf', $conf_hash)
+  }
+
+  if $generic_service_hash {
+    create_resources('glance::generic_service', $generic_service_hash)
+  }
+
 
   if $glance::dependency_class {
     include $glance::dependency_class
