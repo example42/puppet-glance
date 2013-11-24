@@ -10,8 +10,7 @@ class glance::params {
   }
 
   $service_name = $::osfamily ? {
-    'Redhat' => 'openstack-glance-api',
-     default  => 'glance-api',
+     default  => '',
   }
 
   $config_file_path = $::osfamily ? {

@@ -28,8 +28,7 @@ This module is intended to be a quick replacement for setups where you want to m
 ##Setup
 
 ###Resources managed by glance module
-* This module installs the glance package (in case of multiple services, the glance-api package is installed)
-* Enables the glance service (in case of multiple services, the glance-api service is managed)
+* This module installs the glance basic package
 * Can manage all the configuration files (by default no file is changed)
 * Can manage any glance service and its configuration file (by default no file is changed)
 
@@ -60,6 +59,7 @@ The module provides a generic define to manage any glance configuration file in 
 A define to manage the package/service/configfile of single glance services. To install the package and run the service:
 
         glance::generic_service { 'glance-registry': }
+        glance::generic_service { 'glance-api': }
 
 To provide a configuration file for the service (alternative to glance::conf):
 
