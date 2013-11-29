@@ -70,7 +70,7 @@ define glance::conf (
   include glance
 
   $manage_path    = pickx($path, "${glance::config_dir_path}/${name}")
-  $manage_content = choose_default($content, $template)
+  $manage_content = default_content($content, $template)
   $manage_mode    = pickx($mode, $glance::config_file_mode)
   $manage_owner   = pickx($owner, $glance::config_file_owner)
   $manage_group   = pickx($group, $glance::config_file_group)
