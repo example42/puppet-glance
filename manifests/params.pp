@@ -18,11 +18,11 @@ class glance::params {
   }
 
   $config_file_mode = $::osfamily ? {
-    default => '0640',
+    default => '0644',
   }
 
   $config_file_owner = $::osfamily ? {
-    default => 'root',
+    default => 'glance',
   }
 
   $config_file_group = $::osfamily ? {
