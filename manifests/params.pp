@@ -14,7 +14,7 @@ class glance::params {
   }
 
   $config_file_path = $::osfamily ? {
-    default => '/etc/glance/glance.conf',
+    default => '',
   }
 
   $config_file_mode = $::osfamily ? {
