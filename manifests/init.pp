@@ -29,9 +29,9 @@ class glance (
   $config_file_template      = undef,
   $config_file_content       = undef,
   $config_file_options_hash  = undef,
-  $config_file_owner         = $glance::params::config_file_owner
-  $config_file_group         = $glance::params::config_file_group
-  $config_file_mode          = $glance::params::config_file_mode
+  $config_file_owner         = $glance::params::config_file_owner,
+  $config_file_group         = $glance::params::config_file_group,
+  $config_file_mode          = $glance::params::config_file_mode,
 
   $config_dir_path           = $glance::params::config_dir_path,
   $config_dir_source         = undef,
